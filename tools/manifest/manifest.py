@@ -61,7 +61,10 @@ class TypeData(object):
         return bool(self.data)
 
     def __len__(self):
-        return len(self.data)
+        rv = len(self.data)
+        if self.json_data is not None:
+            rv += len(self.json_data)
+        return rv
 
     def __delitem__(self, key):
         del self.data[key]
@@ -116,6 +119,10 @@ class TypeData(object):
                                                         path,
                                                         test)
                 data.add(manifest_item)
+            try:
+                del self.json_data[path]
+            except KeyError:
+                pass
             self.data[key] = data
         else:
             raise ValueError
@@ -285,6 +292,10 @@ class Manifest(object):
                         del self._data[old_type][rel_path]
                     except KeyError:
                         pass
+                else:
+                    for test_data in itervalues(self._data):
+                        if rel_path in test_data:
+                            del test_data[rel_path]
 
         if reftest_changes:
             reftests, reftest_nodes, changed_hashes = self._compute_reftests(reftest_nodes)
@@ -433,7 +444,7 @@ def load_and_update(tests_root,
         changed = manifest.update(tree)
         if write_manifest and changed:
             write(manifest, manifest_path)
-            tree.dump_caches()
+        tree.dump_caches()
 
     return manifest
 

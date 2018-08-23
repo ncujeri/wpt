@@ -217,6 +217,7 @@ class MtimeCache(CacheFile):
         self.data["/tests_root"] = self.tests_root
         super(MtimeCache, self).dump()
 
+
 class GitIgnoreCache(CacheFile):
     file_name = "gitignore.json"
 
