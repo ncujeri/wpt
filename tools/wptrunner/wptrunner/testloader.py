@@ -398,7 +398,6 @@ class ManifestLoader(object):
             path_data = {"url_base": url_base}
             path_data.update(paths)
             rv[manifest_file] = path_data
-        print rv
         return rv
 
     def load_manifest(self, tests_path, manifest_path, metadata_path, url_base="/", **kwargs):
